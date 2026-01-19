@@ -49,6 +49,39 @@ This project includes an **Online** mode for playing with a friend on the same W
 - Online mode is designed for LAN. Over the internet you would need port-forwarding or a tunnel.
 - Host is authoritative: the host syncs moves/restarts to the joiner.
 
+## Deploy Online Relay on Render (Internet Play)
+
+Render cannot run a Tkinter GUI, but it can host an **online relay server**. You still run the game (`python main.py`) on both computers, and both clients connect to the same Render server.
+
+### Files included
+
+- `render_server.py` (FastAPI WebSocket relay)
+- `requirements.txt`
+- `render.yaml`
+
+### Deploy steps
+
+1. Push this repo to GitHub.
+2. In Render:
+   - New +
+   - Blueprint
+   - Select your GitHub repo
+3. Deploy. Render will run:
+   - Build: `pip install -r requirements.txt`
+   - Start: `uvicorn render_server:app --host 0.0.0.0 --port $PORT`
+
+### After deploy
+
+Your service URL will look like:
+
+`https://<your-service>.onrender.com`
+
+WebSocket endpoint:
+
+`wss://<your-service>.onrender.com/ws?room=ROOMNAME`
+
+To use this from the desktop app, the networking layer must use WebSockets (LAN TCP mode is separate).
+
 ## Notes
 
 - `X` always starts.
